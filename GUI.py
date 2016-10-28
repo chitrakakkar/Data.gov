@@ -26,11 +26,11 @@ class Data_Gov_Gui(wx.Frame):
         # Input search keyword name widget ----------------------------------------------
         # self.model_lblname = wx.StaticText(self.panel, pos=(500, 500), label="Search", style=wx.ALIGN_RIGHT)
         # self.model_lblname.SetFont(bold_font)
-        self.model_name = wx.TextCtrl(self.panel, pos=(200, 300), size=(200, -1), style=wx.ALIGN_LEFT, value='search keyword')
-        self.search_button = wx.Button(self.panel, label="Search")
+        self.model_name = wx.TextCtrl(self.panel, pos=(200, 300), size=(200, -1), style=wx.ALIGN_LEFT, value='')
+        self.search_button = wx.Button(self.panel, pos=(400, 300), size =(20,-1),label="Search")
         self.search_button.Bind(wx.EVT_BUTTON, self.OnSearchcButton())
-        self.run_button.SetBackgroundColour((141, 221, 247))
-        self.run_button.SetFont(bold_font)
+        self.search_button.SetBackgroundColour((141, 221, 247))
+        self.search_button.SetFont(bold_font)
         # self.clear_button = wx.Button(self.panel, label="Clear All")
         # self.clear_button.Bind(wx.EVT_BUTTON, self.OnClearButton)
         # self.clear_button.SetBackgroundColour((255, 126, 71))  # orange
@@ -46,6 +46,20 @@ class Data_Gov_Gui(wx.Frame):
     def OnSearchcButton(self):
         jobs = ap.all_job()
         return jobs
+
+    def OnClearButton(self):
+        pass
+
+    def OnSaveButton(self):
+        pass
+
+    def OnRefreshButton(self):
+        pass
+    def OnQuitButton(self):
+        exit(0)
+
+
+
 # Start the main part of the program
 # application must have a wx.App instance, and all creation of UI objects should be delayed until after the wx.App o
 app = wx.App(False)   # bootstrap the wxPython system and initialize the underlying gui toolkit

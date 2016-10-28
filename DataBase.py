@@ -1,5 +1,6 @@
 from Database_table_model import *
 from tabulate import tabulate
+import json
 
 
 def insert_all_job_to_table(job_data):
@@ -33,13 +34,20 @@ def compile_jobs(record):
 
 
 def get_parametrized_data(search_keyword):
+    all_jobs = []
     # select
     # Location
     # from job_table_model where
     # Location
     # Like
-    # '%NY'
-    jobs = [job_table_model.select().where(job_table_model.Location.contains(search_keyword))]
-    print("Jobs", jobs)
+    # '%NY' [u.username for u in user_q], .where(job_table_model.Location.contains(search_keyword))
+    jobs = job_table_model.select()
+    # Location = [job.Location for job in jobs]
+
+    # jobs = job_table_model.select().where(job_table_model.Location.contains(search_keyword))
+    # print("Location", Location)
+    #
     for job in jobs:
-        print(tabulate("Here is the parametrized query", job))
+        if search_keyword.lower() in str(job.Location).lower():
+            all_jobs.append(job)
+    return all_jobs

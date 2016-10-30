@@ -5,11 +5,6 @@ from GUI import *
 
 
 def main():
-    app = wx.App(False)  # bootstrap the wxPython system and initialize the underlying gui toolkit
-    # set and get application-wide properties
-    frame = Data_Gov_Gui(None)  # This defines frame as our GUI
-    frame.Show()  # Show the GUI
-    app.MainLoop()
     user_input = str(input("Enter the state"))
     jobs = digital_job.all_job()
     #print(tabulate(jobs, tablefmt="fancy_grid"))

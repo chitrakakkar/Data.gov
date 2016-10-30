@@ -1,8 +1,10 @@
-import os, wx
+import os
 from API import digital_job as ap
-from tabulate import *
 import wx
+
 import wx.grid
+
+
 
 
 # Define the GUI as a window/frame

@@ -5,49 +5,68 @@ import wx
 import wx.grid
 
 
-
-
 # Define the GUI as a window/frame
 class Data_Gov_Gui(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, size=(1000, 1000))  # Bring everything from __init__ for Frame into this class
+        wx.Frame.__init__(self, parent, size=(1100, 700))  # Bring everything from __init__ for Frame into this class
         # GUI APPEARANCE (LAYOUT AND DESIGN)
         self.panel = wx.Panel(self, size=(500, 500))
+        # self.SetBackgroundColour('pink')
+        self.SetBackgroundColour((198, 235, 242))
         self.SetTitle('Data Gov JOBS')
-        self.SetBackgroundColour('pink')
         self.CreateStatusBar()
-        menu = wx.Menu()
-        menu.Append(wx.ID_ABOUT, "About", "wxPython GUI")
-        menu.AppendSeparator()
-        menu.Append(wx.ID_EXIT, "Exit", " Exit the GUI")
-        menuBar = wx.MenuBar()
+        self.menu = wx.Menu()
+        self.menu.Append(wx.ID_ABOUT, "About", "wxPython GUI")
+        self.menu.AppendSeparator()
+        self.menu.Append(wx.ID_EXIT, "Exit", " Exit the GUI")
+        self.menuBar = wx.MenuBar()
         # Give the MenuBar a Title
-        menuBar.Append(menu, "File")
+        self.menuBar.Append(self.menu, "File")
         # Connect the MenuBar to the frame
-        self.SetMenuBar(menuBar)
+        self.SetMenuBar(self.menuBar)
         # Set the fonts to be used
+        self.menuBar.Bind(wx.EVT_MENU, self.OnQuitButton, self.menuBar)
+        self.Show(True)
         bold_font = wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
-        # Input search keyword name widget ----------------------------------------------
-        # self.model_lblname = wx.StaticText(self.panel, pos=(500, 500), label="Search", style=wx.ALIGN_RIGHT)
-        # self.model_lblname.SetFont(bold_font)
-        self.search_Txt = wx.TextCtrl(self.panel, pos=(200, 300), size=(200, -1), style=wx.ALIGN_LEFT, value='Enter the keyword')
-        self.search_button = wx.Button(self.panel, pos=(400, 300), size=(20, -1), label="")
+        self.Database_Select = wx.CheckBox(self.panel, 10, 'Database_Mode', pos=(600, 10))
+        self.Database_Select.SetValue(False)
+        self.search_Txt = wx.TextCtrl(self.panel, pos=(400, 100), size=(400, 25), style=wx.ALIGN_LEFT, value='Enter the keyword')
+        self.search_button = wx.Button(self.panel, pos=(800, 100), size=(30, 25), label="S")
+        self.search_button.SetForegroundColour('orange')
+        self.All_Jobs = wx.CheckBox(self.panel, 10, 'All Jobs', pos=(50, 200))
+        self.All_Jobs.SetValue(False)
+        self.Location_Based = wx.CheckBox(self.panel, 10, 'Location-Based', pos=(250, 200))
+        self.Location_Based.SetValue(False)
+        self.Part_Time = wx.CheckBox(self.panel, 10, 'Part-Time', pos=(500, 200))
+        self.Part_Time .SetValue(False)
+        self.Full_Time = wx.CheckBox(self.panel, 10, 'Full-Time', pos=(750, 200))
+        self.Full_Time.SetValue(False)
+        self.Specific_Job = wx.CheckBox(self.panel, 10, 'Specific-Jobs', pos=(975, 200))
+        self.Specific_Job.SetValue(False)
         self.search_button.Bind(wx.EVT_BUTTON, self.OnSearchcButton)
-        # self.display_Txt = wx.TextCtrl(self.panel, pos=(10, 400), size=(980, 170), style=wx.ALIGN_LEFT| wx.TE_MULTILINE, value="")
-        self.display_Txt = wx.grid.Grid(self.panel, pos=(10, 400), id=1, name="Search-result", size=(980, 170))
+        self.display_Txt = wx.grid.Grid(self.panel, pos=(10, 300), id=1, name="Search-result", size=(1080, 170))
+        color = (255, 255, 255)
+        color2 = 206, 133, 226
+        self.display_Txt.SetDefaultCellBackgroundColour(color)
+        self.display_Txt.SetForegroundColour(color2)
         self.search_button.SetBackgroundColour((141, 221, 247))
         self.search_button.SetFont(bold_font)
-        self.clear_button = wx.Button(self.panel, pos=(50, 700), size=(100, -1), label="Quit")
-        self.clear_button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
-        self.clear_button.SetBackgroundColour((255, 126, 71))  # orange
-        self.clear_button.SetFont(bold_font)
-        # -------------- Define the layouts of the widgets ----------------
-        # b = 5
-        # w = 150
-        # model_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        # # model_sizer.Add(self.model_lblname, 0, wx.ALL, b)
-        # model_sizer.Add(self.model_name, 0, wx.ALL, b)
-        # # model_sizer.SetItemMinSize(self.model_lblname, (w, -1))
+        self.Quit_Button = wx.Button(self.panel, pos=(30, 600), size=(100, -1), label="Quit")
+        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
+        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Quit_Button.SetFont(bold_font)
+        self.Quit_Button = wx.Button(self.panel, pos=(300, 600), size=(100, -1), label="Clear")
+        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
+        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Quit_Button.SetFont(bold_font)
+        self.Quit_Button = wx.Button(self.panel, pos=(600, 600), size=(100, -1), label="Refresh")
+        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
+        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Quit_Button.SetFont(bold_font)
+        self.Quit_Button = wx.Button(self.panel, pos=(900, 600), size=(100, -1), label="Save")
+        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
+        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Quit_Button.SetFont(bold_font)
 
     # @staticmethod
     def OnSearchcButton(self, e):
@@ -86,8 +105,7 @@ class Data_Gov_Gui(wx.Frame):
         pass
 
     def OnQuitButton(self, e):
-
-        exit(1)
+        exit(0)
 
 # Start the main part of the program
 # application must have a wx.App instance, and all creation of UI objects should be delayed until after the wx.App o

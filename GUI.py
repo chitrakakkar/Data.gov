@@ -31,8 +31,8 @@ class Data_Gov_Gui(wx.Frame):
         self.Database_Select = wx.CheckBox(self.panel, 10, 'Database_Mode', pos=(600, 10))
         self.Database_Select.SetValue(False)
         self.search_Txt = wx.TextCtrl(self.panel, pos=(400, 100), size=(400, 25), style=wx.ALIGN_LEFT, value='Enter the keyword')
-        self.search_button = wx.Button(self.panel, pos=(800, 100), size=(30, 25), label="S")
-        self.search_button.SetForegroundColour('orange')
+        self.Search_button = wx.Button(self.panel, pos=(800, 100), size=(30, 25), label="S")
+        self.Search_button.SetForegroundColour('orange')
         self.All_Jobs = wx.CheckBox(self.panel, 10, 'All Jobs', pos=(50, 200))
         self.All_Jobs.SetValue(False)
         self.Location_Based = wx.CheckBox(self.panel, 10, 'Location-Based', pos=(250, 200))
@@ -43,30 +43,30 @@ class Data_Gov_Gui(wx.Frame):
         self.Full_Time.SetValue(False)
         self.Specific_Job = wx.CheckBox(self.panel, 10, 'Specific-Jobs', pos=(975, 200))
         self.Specific_Job.SetValue(False)
-        self.search_button.Bind(wx.EVT_BUTTON, self.OnSearchcButton)
         self.display_Txt = wx.grid.Grid(self.panel, pos=(10, 300), id=1, name="Search-result", size=(1080, 170))
         color = (255, 255, 255)
         color2 = 206, 133, 226
         self.display_Txt.SetDefaultCellBackgroundColour(color)
         self.display_Txt.SetForegroundColour(color2)
-        self.search_button.SetBackgroundColour((141, 221, 247))
-        self.search_button.SetFont(bold_font)
+        self.Search_button.SetBackgroundColour((141, 221, 247))
+        self.Search_button.SetFont(bold_font)
+        self.Search_button.Bind(wx.EVT_BUTTON, self.OnSearchcButton)
         self.Quit_Button = wx.Button(self.panel, pos=(30, 600), size=(100, -1), label="Quit")
         self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
         self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Quit_Button.SetFont(bold_font)
-        self.Quit_Button = wx.Button(self.panel, pos=(300, 600), size=(100, -1), label="Clear")
-        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
-        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
-        self.Quit_Button.SetFont(bold_font)
-        self.Quit_Button = wx.Button(self.panel, pos=(600, 600), size=(100, -1), label="Refresh")
-        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
-        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
-        self.Quit_Button.SetFont(bold_font)
-        self.Quit_Button = wx.Button(self.panel, pos=(900, 600), size=(100, -1), label="Save")
-        self.Quit_Button.Bind(wx.EVT_BUTTON, self.OnQuitButton)
-        self.Quit_Button.SetBackgroundColour((206, 133, 226))  # orange
-        self.Quit_Button.SetFont(bold_font)
+        self.Clear_Button = wx.Button(self.panel, pos=(300, 600), size=(100, -1), label="Clear")
+        self.Clear_Button.Bind(wx.EVT_BUTTON, self.OnClearButton)
+        self.Clear_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Clear_Button.SetFont(bold_font)
+        self.Refresh_Button = wx.Button(self.panel, pos=(600, 600), size=(100, -1), label="Refresh")
+        self.Refresh_Button.Bind(wx.EVT_BUTTON, self.OnRefreshButton)
+        self.Refresh_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Refresh_Button.SetFont(bold_font)
+        self.Save_Button = wx.Button(self.panel, pos=(900, 600), size=(100, -1), label="Save")
+        self.Save_Button.Bind(wx.EVT_BUTTON, self.OnSaveButton)
+        self.Save_Button.SetBackgroundColour((206, 133, 226))  # orange
+        self.Save_Button.SetFont(bold_font)
 
     # @staticmethod
     def OnSearchcButton(self, e):
@@ -96,7 +96,10 @@ class Data_Gov_Gui(wx.Frame):
                     self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
                     self.display_Txt.AutoSizeColumns(True)
     def OnClearButton(self,e):
-        pass
+        # self.display_Txt.SetColLabelValue = " "
+        self.display_Txt.ClearGrid()
+       
+
 
     def OnSaveButton(self,e):
         pass

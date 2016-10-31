@@ -1,7 +1,6 @@
 import os
 from API import digital_job as ap
 import wx
-
 import wx.grid
 
 
@@ -63,6 +62,7 @@ class Data_Gov_Gui(wx.Frame):
         self.Refresh_Button.Bind(wx.EVT_BUTTON, self.OnRefreshButton)
         self.Refresh_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Refresh_Button.SetFont(bold_font)
+        self.Refresh_Button.Disable()
         self.Save_Button = wx.Button(self.panel, pos=(900, 600), size=(100, -1), label="Save")
         self.Save_Button.Bind(wx.EVT_BUTTON, self.OnSaveButton)
         self.Save_Button.SetBackgroundColour((206, 133, 226))  # orange
@@ -98,7 +98,6 @@ class Data_Gov_Gui(wx.Frame):
     def OnClearButton(self,e):
         # self.display_Txt.SetColLabelValue = " "
         self.display_Txt.ClearGrid()
-       
 
 
     def OnSaveButton(self,e):

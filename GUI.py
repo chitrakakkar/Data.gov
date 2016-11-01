@@ -2,6 +2,7 @@ import os
 from API import digital_job as ap
 import wx
 import wx.grid
+from DataBase import *
 
 
 # Define the GUI as a window/frame
@@ -13,7 +14,7 @@ class Data_Gov_Gui(wx.Frame):
         # self.SetBackgroundColour('pink')
         self.SetBackgroundColour((198, 235, 242))
         self.SetTitle('Data Gov JOBS')
-        self.CreateStatusBar()
+        # self.CreateStatusBar()
         # --------MEnu Designed----------------
         self.menu = wx.Menu()
         self.menu.Append(wx.ID_ABOUT, "About", "wxPython GUI")
@@ -29,7 +30,7 @@ class Data_Gov_Gui(wx.Frame):
         self.Show(True)
         bold_font = wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         # ----------------Database Mode check-Box---------------
-        self.Database_Select = wx.CheckBox(self.panel, 10, 'Database_Mode', pos=(600, 10))
+        self.Database_Select = wx.CheckBox(self.panel, 10, 'Offline-search', pos=(600, 10))
         self.Database_Select.SetValue(False)
         # ------------Search text Box -------------------------
         self.search_Txt = wx.TextCtrl(self.panel, pos=(400, 100), size=(400, 25), style=wx.ALIGN_LEFT, value='Enter the keyword')
@@ -82,11 +83,11 @@ class Data_Gov_Gui(wx.Frame):
         self.Save_Button.Bind(wx.EVT_BUTTON, self.OnSaveButton)
         self.Save_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Save_Button.SetFont(bold_font)
-
+        self.Jobs = ap.all_job()
     # This calls the API to fetch all the jobs data.
     def OnSearchcButton(self, e):
         # displays the jobs which is a list of dictionaries
-        jobs = ap.all_job()
+        jobs = self.Jobs
         # count the number of dictionaries inside jobs which is a list of dictionaries
         grid_row = len(jobs)
         if grid_row != 0:
@@ -114,9 +115,8 @@ class Data_Gov_Gui(wx.Frame):
         # self.display_Txt.SetColLabelValue = " "
         self.display_Txt.ClearGrid()
 
-
-    def OnSaveButton(self,e):
-        pass
+    def OnSaveButton(self, e):
+        insert_all_job_to_table((self.Jobs))
 
     def OnRefreshButton(self,e):
         pass

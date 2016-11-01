@@ -1,22 +1,30 @@
 from Database_table_model import *
 from tabulate import tabulate
-import json
 
 
 def insert_all_job_to_table(job_data):
     try:
-        job_new = job_table_model.create(
-            Job_ID=job_data['Job_ID'],
-            Job_Title=job_data['Job_Title'],
-            Company_Name=job_data['Company_Name'],
-            Salary=job_data['Salary'],
-            Last_Date=job_data['Last_Date'],
-            Location=job_data['Location'],
-            Link=job_data['Link']
-        )
-        job_new.save()
+        db.connect()
+        db.create_table(job_table_model)
+        if not job_table_model.create_table(True):
+            try:
+                for job in job_data:
+                    job_new = job_table_model.create(
+                        Job_ID=job['Job_ID'],
+                        Job_Title=job['Job_Title'],
+                        Company_Name=job['Company_Name'],
+                        Salary=job['Salary'],
+                        Last_Date=job['Last_Date'],
+                        Location=job['Location'],
+                        Link=job['Link'])
+                    job_new.save()
+                print("Done inserting data")
+            except OperationalError as e:
+                print("I am the error " , e)
+        else:
+            print("here")
     except OperationalError as e:
-        print("I am the error", e)
+        print("Failed connection to the database", e)
 
 
 def get_all_data_from_the_table():
@@ -35,18 +43,7 @@ def compile_jobs(record):
 
 def get_parametrized_data(search_keyword):
     all_jobs = []
-    # select
-    # Location
-    # from job_table_model where
-    # Location
-    # Like
-    # '%NY' [u.username for u in user_q], .where(job_table_model.Location.contains(search_keyword))
     jobs = job_table_model.select()
-    # Location = [job.Location for job in jobs]
-
-    # jobs = job_table_model.select().where(job_table_model.Location.contains(search_keyword))
-    # print("Location", Location)
-    #
     for job in jobs:
         if search_keyword.lower() in str(job.Location).lower():
             all_jobs.append(job)

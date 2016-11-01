@@ -1,6 +1,13 @@
 '''This is where the peewee model for a book will be stored'''
 
 from peewee import *
+
+import os
+for subdir, dirs, files in os.walk('./'):
+    if "CK.db" in files:
+      os.remove("CK.db")
+
+
 db = SqliteDatabase("CK.db")
 
 

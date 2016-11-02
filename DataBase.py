@@ -20,7 +20,7 @@ def insert_all_job_to_table(job_data):
                     job_new.save()
                 print("Done inserting data")
             except OperationalError as e:
-                print("I am the error " , e)
+                print("I am the error ", e)
         else:
             print("here")
     except OperationalError as e:
@@ -30,15 +30,23 @@ def insert_all_job_to_table(job_data):
 def get_all_data_from_the_table():
     all_data = []
     for job in job_table_model.select():
-        small = compile_jobs(job)
-        all_data.append(small)
-    print(tabulate(all_data, tablefmt="fancy_grid",  headers=["JOB_ID", "Job_Title", "Company_name",
-                                                              "Salary", "Last_Date", "Location", "Link"]))
+        temp = {}
+        temp['Job_ID'] = job.Job_ID
+        temp['Job_Title']=job.Job_Title
+        temp['Company_Name']=job.Company_Name
+        temp['Salary']=job.Salary
+        temp['Last_Date']=job.Last_Date
+        temp['Location']=job.Location
+        temp['Link']=job.Link
+        all_data.append(temp)
+    return all_data
+    # print(tabulate(all_data, tablefmt="fancy_grid",  headers=["JOB_ID", "Job_Title", "Company_name",
+    #                                                           "Salary", "Last_Date", "Location", "Link"]))
 
 
-def compile_jobs(record):
-    small_list = [record.Job_ID, record. Job_Title, record.Company_Name, record.Salary, record.Last_Date, record.Location, record.Link]
-    return small_list
+# def compile_jobs(record):
+#     small_list = [record.Job_ID, record. Job_Title, record.Company_Name, record.Salary, record.Last_Date, record.Location, record.Link]
+#     return small_list
 
 
 def get_parametrized_data(search_keyword):

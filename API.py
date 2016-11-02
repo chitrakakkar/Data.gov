@@ -43,8 +43,13 @@ class digital_job:
 def parse_data(response_text):
     job_data_item = []
     for data in response_text:
-        job = {'Job_ID': data['id'], 'Job_Title': data['position_title'], 'Company_Name': data['organization_name'], 'Salary': data['maximum'],
-               'Last_Date': data['end_date'], 'Location': data['locations'][0], 'Link': data['url']}
+        job = {'Job_ID': data['id'].split(':')[1],
+               'Job_Title': data['position_title'],
+               'Company_Name': data['organization_name'],
+               'Salary': data['maximum'],
+               'Last_Date': data['end_date'],
+               'Location': data['locations'][0],
+               'Link': data['url']}
         job_data_item.append(job)
     return job_data_item
 

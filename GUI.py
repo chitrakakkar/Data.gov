@@ -1,4 +1,3 @@
-import os
 from API import digital_job as ap
 import wx
 import wx.grid
@@ -30,8 +29,8 @@ class Data_Gov_Gui(wx.Frame):
         self.Show(True)
         bold_font = wx.Font(15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
         # ----------------Database Mode check-Box---------------
-        self.Database_Select = wx.CheckBox(self.panel, 10, 'Offline-search', pos=(600, 10))
-        self.Database_Select.SetValue(False)
+        self.offline_mode = wx.CheckBox(self.panel, 10, 'Offline-search', pos=(600, 10))
+        self.offline_mode.SetValue(False)
         # ------------Search text Box -------------------------
         self.search_Txt = wx.TextCtrl(self.panel, pos=(400, 100), size=(400, 25), style=wx.ALIGN_LEFT, value='Enter the keyword')
         # ----------Search button------------------
@@ -84,12 +83,24 @@ class Data_Gov_Gui(wx.Frame):
         self.Save_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Save_Button.SetFont(bold_font)
         self.Jobs = ap.all_job()
+        # -------------Grid-Creation----------------------
+        headers = ["JOB_ID", "Job_Title", "Company_name", "Salary", "Last_Date", "Location", "Link"]
+        headers.sort()
+        self.display_Txt.CreateGrid(len(self.Jobs), len(headers))
+        for Counter in range(0, len(headers)):
+            column_Header = headers[Counter]
+            self.display_Txt.SetColLabelValue(Counter, column_Header)
     # This calls the API to fetch all the jobs data.
+
     def OnSearchcButton(self, e):
-        # displays the jobs which is a list of dictionaries
-        jobs = self.Jobs
-        # count the number of dictionaries inside jobs which is a list of dictionaries
+        if not self.offline_mode.IsChecked():
+            # displays the jobs which is a list of dictionaries
+            jobs = self.Jobs
+        else:
+            jobs = get_all_data_from_the_table()
+            # count the number of dictionaries inside jobs which is a list of dictionaries
         grid_row = len(jobs)
+
         if grid_row != 0:
             dict = {}
             # telling complier that job[0] is a dictionary
@@ -99,11 +110,7 @@ class Data_Gov_Gui(wx.Frame):
             grid_col_Label.extend(dict.keys())  # merges all the keys as header into grid_co_label array
             grid_col_Label.sort()
             # displays the table inside the grid_view
-            self.display_Txt.CreateGrid(grid_row, len(grid_col_Label))
             # to set column labels in grid
-            for Counter in range(0, len(grid_col_Label)):
-                column_name = grid_col_Label[Counter]
-                self.display_Txt.SetColLabelValue(Counter, column_name)
             for Counter in range(0, grid_row):
                 temp_dict= {}
                 temp_dict = jobs[Counter]
@@ -111,12 +118,14 @@ class Data_Gov_Gui(wx.Frame):
                     Values = temp_dict[keys]
                     self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
                     self.display_Txt.AutoSizeColumns(True)
+
     def OnClearButton(self,e):
-        # self.display_Txt.SetColLabelValue = " "
         self.display_Txt.ClearGrid()
 
     def OnSaveButton(self, e):
         insert_all_job_to_table((self.Jobs))
+        self.display_Txt.ClearGrid()
+
 
     def OnRefreshButton(self,e):
         pass

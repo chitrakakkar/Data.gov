@@ -38,6 +38,7 @@ class Data_Gov_Gui(wx.Frame):
         self.Search_button.SetForegroundColour('orange')
         # ---------------All jobs check box---------------
         self.All_Jobs = wx.CheckBox(self.panel, 10, 'All Jobs', pos=(50, 200))
+        self.All_Jobs = wx.RadioBox(self.panel)
         self.All_Jobs.SetValue(False)
         # ----------------Locations based check box ----------------------
         self.Location_Based = wx.CheckBox(self.panel, 10, 'Location-Based', pos=(250, 200))
@@ -72,11 +73,10 @@ class Data_Gov_Gui(wx.Frame):
         self.Clear_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Clear_Button.SetFont(bold_font)
         # ---------------Refresh-button -----------------
-        self.Refresh_Button = wx.Button(self.panel, pos=(600, 600), size=(100, -1), label="Refresh")
+        self.Refresh_Button = wx.Button(self.panel, pos=(600, 600), size=(175, -1), label="Refresh Display")
         self.Refresh_Button.Bind(wx.EVT_BUTTON, self.OnRefreshButton)
         self.Refresh_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Refresh_Button.SetFont(bold_font)
-        self.Refresh_Button.Disable()
         # ---------------Save-button -----------------
         self.Save_Button = wx.Button(self.panel, pos=(900, 600), size=(100, -1), label="Save")
         self.Save_Button.Bind(wx.EVT_BUTTON, self.OnSaveButton)
@@ -87,6 +87,7 @@ class Data_Gov_Gui(wx.Frame):
         headers = ["JOB_ID", "Job_Title", "Company_name", "Salary", "Last_Date", "Location", "Link"]
         headers.sort()
         self.display_Txt.CreateGrid(len(self.Jobs), len(headers))
+        # self.display_Txt.CreateGrid(len(self.Jobs), len(headers))
         for Counter in range(0, len(headers)):
             column_Header = headers[Counter]
             self.display_Txt.SetColLabelValue(Counter, column_Header)
@@ -96,9 +97,41 @@ class Data_Gov_Gui(wx.Frame):
         if not self.offline_mode.IsChecked():
             # displays the jobs which is a list of dictionaries
             jobs = self.Jobs
+            self.grid_Creation(jobs)
         else:
             jobs = get_all_data_from_the_table()
             # count the number of dictionaries inside jobs which is a list of dictionaries
+            self.grid_Creation(jobs)
+
+    def OnClearButton(self,e):
+        self.display_Txt.ClearGrid()
+        self.search_Txt.Clear()
+        self.All_Jobs.SetValue(False)
+        self.Location_Based.SetValue(False)
+        self.Part_Time.SetValue(False)
+        self.Full_Time.SetValue(False)
+        self.Specific_Job.SetValue(False)
+
+    def OnSaveButton(self, e):
+        insert_all_job_to_table((self.Jobs))
+        self.display_Txt.ClearGrid()
+
+
+    def OnRefreshButton(self,e):
+        if not self.offline_mode.IsChecked():
+            if self.Location_Based.IsChecked():
+                jobs = ap.location_based_jobs(self.search_Txt.GetValue())
+                print("Here",jobs)
+                self.grid_Creation(jobs)
+            if self.Specific_Job.IsChecked():
+                jobs = ap.specific_jobs(self.search_Txt.GetValue())
+                print("SJ", jobs)
+                self.grid_Creation(jobs)
+
+    def OnQuitButton(self, e):
+        exit(0)
+
+    def grid_Creation(self, jobs):
         grid_row = len(jobs)
 
         if grid_row != 0:
@@ -112,26 +145,13 @@ class Data_Gov_Gui(wx.Frame):
             # displays the table inside the grid_view
             # to set column labels in grid
             for Counter in range(0, grid_row):
-                temp_dict= {}
+                temp_dict = {}
                 temp_dict = jobs[Counter]
                 for keys in grid_col_Label:
                     Values = temp_dict[keys]
                     self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
                     self.display_Txt.AutoSizeColumns(True)
 
-    def OnClearButton(self,e):
-        self.display_Txt.ClearGrid()
-
-    def OnSaveButton(self, e):
-        insert_all_job_to_table((self.Jobs))
-        self.display_Txt.ClearGrid()
-
-
-    def OnRefreshButton(self,e):
-        pass
-
-    def OnQuitButton(self, e):
-        exit(0)
 
 # Start the main part of the program
 # application must have a wx.App instance, and all creation of UI objects should be delayed until after the wx.App o

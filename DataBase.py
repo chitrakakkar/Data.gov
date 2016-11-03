@@ -44,11 +44,6 @@ def get_all_data_from_the_table():
     #                                                           "Salary", "Last_Date", "Location", "Link"]))
 
 
-# def compile_jobs(record):
-#     small_list = [record.Job_ID, record. Job_Title, record.Company_Name, record.Salary, record.Last_Date, record.Location, record.Link]
-#     return small_list
-
-
 def get_parametrized_data(search_keyword):
     all_jobs = []
     jobs = job_table_model.select()

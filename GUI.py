@@ -38,7 +38,6 @@ class Data_Gov_Gui(wx.Frame):
         self.Search_button.SetForegroundColour('orange')
         # ---------------All jobs check box---------------
         self.All_Jobs = wx.CheckBox(self.panel, 10, 'All Jobs', pos=(50, 200))
-        self.All_Jobs = wx.RadioBox(self.panel)
         self.All_Jobs.SetValue(False)
         # ----------------Locations based check box ----------------------
         self.Location_Based = wx.CheckBox(self.panel, 10, 'Location-Based', pos=(250, 200))
@@ -121,12 +120,31 @@ class Data_Gov_Gui(wx.Frame):
         if not self.offline_mode.IsChecked():
             if self.Location_Based.IsChecked():
                 jobs = ap.location_based_jobs(self.search_Txt.GetValue())
-                print("Here",jobs)
                 self.grid_Creation(jobs)
             if self.Specific_Job.IsChecked():
                 jobs = ap.specific_jobs(self.search_Txt.GetValue())
                 print("SJ", jobs)
                 self.grid_Creation(jobs)
+            if self.Part_Time.IsChecked():
+                jobs = ap.partTime_jobs(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+            if self.Full_Time.IsChecked():
+                jobs = ap.specific_jobs(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+        else:
+            if self.Location_Based.IsChecked():
+                jobs = get_parametrized_data(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+            if self.Specific_Job.IsChecked():
+                jobs = get_parametrized_data(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+            if self.Part_Time.IsChecked():
+                jobs = get_parametrized_data(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+            if self.Full_Time.IsChecked():
+                jobs = get_parametrized_data(self.search_Txt.GetValue())
+                self.grid_Creation(jobs)
+
 
     def OnQuitButton(self, e):
         exit(0)
@@ -151,14 +169,5 @@ class Data_Gov_Gui(wx.Frame):
                     Values = temp_dict[keys]
                     self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
                     self.display_Txt.AutoSizeColumns(True)
-
-
-# Start the main part of the program
-# application must have a wx.App instance, and all creation of UI objects should be delayed until after the wx.App o
-app = wx.App(False)   # bootstrap the wxPython system and initialize the underlying gui toolkit
-# set and get application-wide properties
-frame = Data_Gov_Gui(None)  # This defines frame as our GUI
-frame.Show()         # Show the GUI
-app.MainLoop()       # Execute the main GUI event loop-start the application's MainLoop whose role is to handle the events.
 
 

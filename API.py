@@ -23,8 +23,8 @@ class digital_job:
         return result
 
     @staticmethod
-    def schedule_based_jobs(keyword):
-        url = 'https://api.usa.gov/jobs/search.json?query='+str(keyword)
+    def partTime_jobs(keyword):
+        url = 'https://api.usa.gov/jobs/search.json?query=parttime'+str(keyword)
         response = requests.get(url)
         print(response.text)
         result = parse_data(response.json())

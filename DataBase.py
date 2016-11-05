@@ -21,8 +21,18 @@ def insert_all_job_to_table(job_data):
                 print("Done inserting data")
             except OperationalError as e:
                 print("I am the error ", e)
-        else:
-            print("here")
+            else:
+                for job in job_data:
+                    job_new = job_table_model.insert(
+                        Job_ID=job['Job_ID'],
+                        Job_Title=job['Job_Title'],
+                        Company_Name=job['Company_Name'],
+                        Salary=job['Salary'],
+                        Last_Date=job['Last_Date'],
+                        Location=job['Location'],
+                        Link=job['Link'])
+                    job_new.execute()
+
     except OperationalError as e:
         print("Failed connection to the database", e)
 

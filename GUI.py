@@ -91,7 +91,6 @@ class Data_Gov_Gui(wx.Frame):
             column_Header = headers[Counter]
             self.display_Txt.SetColLabelValue(Counter, column_Header)
     # This calls the API to fetch all the jobs data.
-
     def OnSearchcButton(self, e):
         if not self.offline_mode.IsChecked():
             # displays the jobs which is a list of dictionaries
@@ -112,44 +111,34 @@ class Data_Gov_Gui(wx.Frame):
         self.Specific_Job.SetValue(False)
 
     def OnSaveButton(self, e):
-        insert_all_job_to_table((self.Jobs))
+        jobs = self.check_checkBoxes()
+        insert_all_job_to_table(jobs)
         self.display_Txt.ClearGrid()
 
+    def OnRefreshButton(self, e):
+        self.display_Txt.ClearGrid()
+        jobs = self.check_checkBoxes()
+        self.grid_Creation(jobs)
 
-    def OnRefreshButton(self,e):
-        if not self.offline_mode.IsChecked():
-            if self.Location_Based.IsChecked():
-                jobs = ap.location_based_jobs(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-            if self.Specific_Job.IsChecked():
-                jobs = ap.specific_jobs(self.search_Txt.GetValue())
-                print("SJ", jobs)
-                self.grid_Creation(jobs)
-            if self.Part_Time.IsChecked():
-                jobs = ap.partTime_jobs(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-            if self.Full_Time.IsChecked():
-                jobs = ap.specific_jobs(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-        else:
-            if self.Location_Based.IsChecked():
-                jobs = get_parametrized_data(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-            if self.Specific_Job.IsChecked():
-                jobs = get_parametrized_data(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-            if self.Part_Time.IsChecked():
-                jobs = get_parametrized_data(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-            if self.Full_Time.IsChecked():
-                jobs = get_parametrized_data(self.search_Txt.GetValue())
-                self.grid_Creation(jobs)
-
+        # else:
+        #     if self.Location_Based.IsChecked():
+        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
+        #         self.grid_Creation(jobs)
+        #     if self.Specific_Job.IsChecked():
+        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
+        #         self.grid_Creation(jobs)
+        #     if self.Part_Time.IsChecked():
+        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
+        #         self.grid_Creation(jobs)
+        #     if self.Full_Time.IsChecked():
+        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
+        #         self.grid_Creation(jobs)
 
     def OnQuitButton(self, e):
         exit(0)
 
     def grid_Creation(self, jobs):
+        print("Jobs", jobs)
         grid_row = len(jobs)
 
         if grid_row != 0:
@@ -162,12 +151,39 @@ class Data_Gov_Gui(wx.Frame):
             grid_col_Label.sort()
             # displays the table inside the grid_view
             # to set column labels in grid
+            print("dict now" , dict)
             for Counter in range(0, grid_row):
                 temp_dict = {}
                 temp_dict = jobs[Counter]
                 for keys in grid_col_Label:
                     Values = temp_dict[keys]
-                    self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
+                    # print("Values = "+str(Values)+"Counter = "+ str(Counter) + "keys = " +str(keys) + "grid col lab"+str(grid_col_Label.index(keys)))
+                    try:
+                        self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
+                    except OperationalError as e:
+                        # print("error", e)
+                        pass
                     self.display_Txt.AutoSizeColumns(True)
 
 
+
+
+    def check_checkBoxes(self):
+        all_job, location, part_time, full_time, specific_job = False, False, False, False, False
+        if not self.offline_mode.IsChecked():
+            if self.All_Jobs.IsChecked():
+                all_job = True
+            if self.Location_Based.IsChecked():
+                location = True
+            if self.Specific_Job.IsChecked():
+                specific_job = True
+            if self.Part_Time.IsChecked():
+                part_time = True
+            if self.Full_Time.IsChecked():
+                full_time = True
+            jobs = ap.jobs_with_combination(all_job, location, part_time, full_time, specific_job)
+            if len(jobs) == 0:
+                jobs = [{"JOB_ID": "-", "Job_Title": "-", "Company_name": "-", "Salary": "-", "Last_Date": "-",
+                         "Location": "-",
+                         "Link": "-"}]
+        return jobs

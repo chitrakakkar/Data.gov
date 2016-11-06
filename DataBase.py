@@ -1,27 +1,10 @@
 from Database_table_model import *
-from tabulate import tabulate
 
 
 def insert_all_job_to_table(job_data):
     try:
-        db.connect()
-        db.create_table(job_table_model)
         if not job_table_model.create_table(True):
             try:
-                for job in job_data:
-                    job_new = job_table_model.create(
-                        Job_ID=job['Job_ID'],
-                        Job_Title=job['Job_Title'],
-                        Company_Name=job['Company_Name'],
-                        Salary=job['Salary'],
-                        Last_Date=job['Last_Date'],
-                        Location=job['Location'],
-                        Link=job['Link'])
-                    job_new.save()
-                print("Done inserting data")
-            except OperationalError as e:
-                print("I am the error ", e)
-            else:
                 for job in job_data:
                     job_new = job_table_model.insert(
                         Job_ID=job['Job_ID'],
@@ -32,26 +15,23 @@ def insert_all_job_to_table(job_data):
                         Location=job['Location'],
                         Link=job['Link'])
                     job_new.execute()
-
+                print("Done inserting data")
+            except OperationalError as e:
+                print("I am the error ", e)
+            else:
+                pass
     except OperationalError as e:
         print("Failed connection to the database", e)
 
 
 def get_all_data_from_the_table():
     all_data = []
-    for job in job_table_model.select():
-        temp = {}
-        temp['Job_ID'] = job.Job_ID
-        temp['Job_Title']=job.Job_Title
-        temp['Company_Name']=job.Company_Name
-        temp['Salary']=job.Salary
-        temp['Last_Date']=job.Last_Date
-        temp['Location']=job.Location
-        temp['Link']=job.Link
+    jobs = job_table_model.select()
+    for job in jobs:
+        temp = {'Job_ID': job.Job_ID, 'Job_Title': job.Job_Title, 'Company_Name': job.Company_Name,
+                'Salary': job.Salary, 'Last_Date': job.Last_Date, 'Location': job.Location, 'Link': job.Link}
         all_data.append(temp)
     return all_data
-    # print(tabulate(all_data, tablefmt="fancy_grid",  headers=["JOB_ID", "Job_Title", "Company_name",
-    #                                                           "Salary", "Last_Date", "Location", "Link"]))
 
 
 def get_parametrized_data(search_keyword):

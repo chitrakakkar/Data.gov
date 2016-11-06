@@ -2,7 +2,7 @@ from API import digital_job as ap
 import wx
 import wx.grid
 from DataBase import *
-
+import os
 
 # Define the GUI as a window/frame
 class Data_Gov_Gui(wx.Frame):
@@ -91,13 +91,16 @@ class Data_Gov_Gui(wx.Frame):
             column_Header = headers[Counter]
             self.display_Txt.SetColLabelValue(Counter, column_Header)
     # This calls the API to fetch all the jobs data.
+
     def OnSearchcButton(self, e):
         if not self.offline_mode.IsChecked():
             # displays the jobs which is a list of dictionaries
             jobs = self.Jobs
+            print(jobs)
             self.grid_Creation(jobs)
         else:
             jobs = get_all_data_from_the_table()
+            print("Jobs from db", jobs)
             # count the number of dictionaries inside jobs which is a list of dictionaries
             self.grid_Creation(jobs)
 
@@ -116,9 +119,14 @@ class Data_Gov_Gui(wx.Frame):
         self.display_Txt.ClearGrid()
 
     def OnRefreshButton(self, e):
-        self.display_Txt.ClearGrid()
-        jobs = self.check_checkBoxes()
-        self.grid_Creation(jobs)
+        if not self.offline_mode.IsChecked():
+            self.display_Txt.ClearGrid()
+            jobs = self.check_checkBoxes()
+            self.grid_Creation(jobs)
+        else:
+            get_all_data_from_the_table()
+
+
 
         # else:
         #     if self.Location_Based.IsChecked():
@@ -135,10 +143,13 @@ class Data_Gov_Gui(wx.Frame):
         #         self.grid_Creation(jobs)
 
     def OnQuitButton(self, e):
+        # for subdir, dirs, files in os.walk('./'):
+        #     if "CK.db" in files:
+        #       os.remove("CK.db")
+
         exit(0)
 
     def grid_Creation(self, jobs):
-        print("Jobs", jobs)
         grid_row = len(jobs)
 
         if grid_row != 0:
@@ -151,7 +162,6 @@ class Data_Gov_Gui(wx.Frame):
             grid_col_Label.sort()
             # displays the table inside the grid_view
             # to set column labels in grid
-            print("dict now" , dict)
             for Counter in range(0, grid_row):
                 temp_dict = {}
                 temp_dict = jobs[Counter]
@@ -164,9 +174,6 @@ class Data_Gov_Gui(wx.Frame):
                         # print("error", e)
                         pass
                     self.display_Txt.AutoSizeColumns(True)
-
-
-
 
     def check_checkBoxes(self):
         all_job, location, part_time, full_time, specific_job = False, False, False, False, False

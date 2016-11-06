@@ -3,13 +3,12 @@
 from peewee import *
 
 import os
-for subdir, dirs, files in os.walk('./'):
-    if "CK.db" in files:
-      os.remove("CK.db")
+# for subdir, dirs, files in os.walk('./'):
+#     if "CK.db" in files:
+#       os.remove("CK.db")
 
 
 db = SqliteDatabase("CK.db")
-
 
 class Base_Model(Model):
     class Meta:

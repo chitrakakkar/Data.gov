@@ -7,7 +7,7 @@ class digital_job:
 
     @staticmethod
     def all_job():
-        url = 'https://api.usa.gov/jobs/search.json?query=jobs&size=10'
+        url = 'https://api.usa.gov/jobs/search.json?query=jobs&size=30'
         # url = 'https://api.usa.gov/jobs/search.json?query=nursing+jobs+in+mn'
         # url = 'https://api.usa.gov/jobs/search.json?query=jobs+at+the+mn&organization_ids=AF'
         response = requests.get(url)
@@ -19,7 +19,7 @@ class digital_job:
     def jobs_with_combination(all_job, location, part_time, full_time, specific_job):
         url ="https://api.usa.gov/jobs/search.json?query=jobs"
         if location:
-            url= url+ " +in+" + "ny"
+            url= url+ " +in+" + "dc"
         if part_time:
             url = url + '+ parttime '
         if full_time:

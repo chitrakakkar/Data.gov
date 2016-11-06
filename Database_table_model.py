@@ -10,6 +10,7 @@ import os
 
 db = SqliteDatabase("CK.db")
 
+
 class Base_Model(Model):
     class Meta:
         database = db

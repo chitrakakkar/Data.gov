@@ -31,13 +31,40 @@ def get_all_data_from_the_table():
         temp = {'Job_ID': job.Job_ID, 'Job_Title': job.Job_Title, 'Company_Name': job.Company_Name,
                 'Salary': job.Salary, 'Last_Date': job.Last_Date, 'Location': job.Location, 'Link': job.Link}
         all_data.append(temp)
+        print(temp)
     return all_data
 
 
-def get_parametrized_data(search_keyword):
+def get_parametrized_data():
     all_jobs = []
     jobs = job_table_model.select()
     for job in jobs:
-        if search_keyword.lower() in str(job.Location).lower():
+        if 'ny' in str(job.Location).lower():
             all_jobs.append(job)
     return all_jobs
+
+
+# def jobs_with_combination(all_job, location, part_time, full_time, specific_job):
+#     all_jobs = []
+#     jobs = job_table_model.select()
+#     for job in jobs:
+#         if location:
+#             if 'ny' in str(job.Location).lower():
+#                 all_jobs.append(job)
+#         return all_jobs
+#
+#
+#             url= url+ " +in+" + "dc"
+#         if part_time:
+#             url = url + '+ parttime '
+#         if full_time:
+#             url = url + '+ fulltime '
+#         if specific_job:
+#             url = url + '+ Computer Engineer '
+#         if all_job:
+#             url = url + "&size=40"
+#         else:
+#             url = url + "&size=10"
+#         response = requests.get(url)
+#         result = parse_data(response.json())
+#         return result

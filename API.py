@@ -7,7 +7,7 @@ class digital_job:
 
     @staticmethod
     def all_job():
-        url = 'https://api.usa.gov/jobs/search.json?query=jobs&size=30'
+        url = 'https://api.usa.gov/jobs/search.json?query=jobs&size=10'
         # url = 'https://api.usa.gov/jobs/search.json?query=nursing+jobs+in+mn'
         # url = 'https://api.usa.gov/jobs/search.json?query=jobs+at+the+mn&organization_ids=AF'
         response = requests.get(url)

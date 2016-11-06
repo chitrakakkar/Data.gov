@@ -81,16 +81,22 @@ class Data_Gov_Gui(wx.Frame):
         self.Save_Button.Bind(wx.EVT_BUTTON, self.OnSaveButton)
         self.Save_Button.SetBackgroundColour((206, 133, 226))  # orange
         self.Save_Button.SetFont(bold_font)
-        self.Jobs = ap.all_job()
+        if not self.offline_mode.IsChecked():
+            self.Jobs = ap.all_job()
+        else:
+            self.Jobs = job_table_model.select()
+    # This calls the API to fetch all the jobs data.
         # -------------Grid-Creation----------------------
+
         headers = ["JOB_ID", "Job_Title", "Company_name", "Salary", "Last_Date", "Location", "Link"]
         headers.sort()
+        print("Length of Jobs", len(self.Jobs))
         self.display_Txt.CreateGrid(len(self.Jobs), len(headers))
         # self.display_Txt.CreateGrid(len(self.Jobs), len(headers))
+
         for Counter in range(0, len(headers)):
             column_Header = headers[Counter]
             self.display_Txt.SetColLabelValue(Counter, column_Header)
-    # This calls the API to fetch all the jobs data.
 
     def OnSearchcButton(self, e):
         if not self.offline_mode.IsChecked():
@@ -100,7 +106,7 @@ class Data_Gov_Gui(wx.Frame):
             self.grid_Creation(jobs)
         else:
             jobs = get_all_data_from_the_table()
-            print("Jobs from db", jobs)
+            print("total Jobs from db", len(jobs))
             # count the number of dictionaries inside jobs which is a list of dictionaries
             self.grid_Creation(jobs)
 
@@ -124,7 +130,8 @@ class Data_Gov_Gui(wx.Frame):
             jobs = self.check_checkBoxes()
             self.grid_Creation(jobs)
         else:
-            get_all_data_from_the_table()
+            jobs = get_all_data_from_the_table()
+
 
 
 
@@ -149,8 +156,11 @@ class Data_Gov_Gui(wx.Frame):
 
         exit(0)
 
+
+
     def grid_Creation(self, jobs):
         grid_row = len(jobs)
+        print(grid_row)
 
         if grid_row != 0:
             dict = {}
@@ -160,6 +170,7 @@ class Data_Gov_Gui(wx.Frame):
             grid_col_Label = []  # an empty array to merge column headers from job
             grid_col_Label.extend(dict.keys())  # merges all the keys as header into grid_co_label array
             grid_col_Label.sort()
+            print("grid_col_Label = ",grid_col_Label)
             # displays the table inside the grid_view
             # to set column labels in grid
             for Counter in range(0, grid_row):
@@ -170,7 +181,7 @@ class Data_Gov_Gui(wx.Frame):
                     # print("Values = "+str(Values)+"Counter = "+ str(Counter) + "keys = " +str(keys) + "grid col lab"+str(grid_col_Label.index(keys)))
                     try:
                         self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
-                    except OperationalError as e:
+                    except : #OperationalError as e:
                         # print("error", e)
                         pass
                     self.display_Txt.AutoSizeColumns(True)

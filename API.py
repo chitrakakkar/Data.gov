@@ -6,6 +6,7 @@ class digital_job:
         pass
 
     @staticmethod
+    #  a request to get all jobs with a cap of 10 jobs at a time
     def all_job():
         url = 'https://api.usa.gov/jobs/search.json?query=jobs&size=10'
         # url = 'https://api.usa.gov/jobs/search.json?query=nursing+jobs+in+mn'
@@ -16,6 +17,7 @@ class digital_job:
         return result
 
     @staticmethod
+    # parametrized api calls depending on the check boxes checked
     def jobs_with_combination(all_job, location, part_time, full_time, specific_job):
         url ="https://api.usa.gov/jobs/search.json?query=jobs"
         if location:
@@ -35,6 +37,7 @@ class digital_job:
         return result
 
 
+# parses the data from http response
 def parse_data(response_text):
     job_data_item = []
     for data in response_text:

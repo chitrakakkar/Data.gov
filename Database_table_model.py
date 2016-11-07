@@ -1,4 +1,4 @@
-'''This is where the peewee model for a book will be stored'''
+'''This is where the peewee model for a job will be stored'''
 
 from peewee import *
 

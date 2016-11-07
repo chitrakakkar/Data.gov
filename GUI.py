@@ -4,9 +4,8 @@ import wx.grid
 from DataBase import *
 import os
 
+
 # Define the GUI as a window/frame
-
-
 class Data_Gov_Gui(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, size=(1100, 700))  # Bring everything from __init__ for Frame into this class
@@ -88,7 +87,7 @@ class Data_Gov_Gui(wx.Frame):
             print("Api", self.Jobs)
         else:
             self.Jobs = job_table_model.select()
-            print("Databse", self.Jobs)
+            print("Database", self.Jobs)
     # This calls the API to fetch all the jobs data.
         # -------------Grid-Creation----------------------
 
@@ -101,15 +100,15 @@ class Data_Gov_Gui(wx.Frame):
         for Counter in range(0, len(headers)):
             column_Header = headers[Counter]
             self.display_Txt.SetColLabelValue(Counter, column_Header)
-
+    # search button event
     def OnSearchcButton(self, e):
         if not self.offline_mode.IsChecked():
             # displays the jobs which is a list of dictionaries
-            jobs = self.Jobs
+            jobs = self.Jobs  # ap.alljobs()
             print(jobs)
             self.grid_Creation(jobs)
         else:
-            jobs = get_all_data_from_the_table()
+            jobs = get_all_data_from_the_table() # job-table_model.select()
             print("total Jobs from db", len(jobs))
             # count the number of dictionaries inside jobs which is a list of dictionaries
             self.grid_Creation(jobs)
@@ -131,8 +130,8 @@ class Data_Gov_Gui(wx.Frame):
     def OnRefreshButton(self, e):
         if not self.offline_mode.IsChecked():
             self.display_Txt.ClearGrid()
-            jobs = self.check_checkBoxes()
-            self.grid_Creation(jobs)
+            jobs = self.check_checkBoxes()  # checks what all check boxes checked for parametrized query
+            self.grid_Creation(jobs)   # creates the grid
         else:
             all_job, location, part_time, full_time, specific_job = False, False, False, False, False
             if self.All_Jobs.IsChecked():
@@ -146,7 +145,7 @@ class Data_Gov_Gui(wx.Frame):
             if self.Full_Time.IsChecked():
                 full_time = True
             jobs = jobs_with_combination_db(all_job, location, part_time, full_time, specific_job)
-            if len(jobs) == 0:
+            if len(jobs) == 0:  # if no job found, would display "-" for every field.
                 jobs = [{"JOB_ID": "-", "Job_Title": "-", "Company_name": "-", "Salary": "-", "Last_Date": "-",
                          "Location": "-",
                          "Link": "-"}]
@@ -164,6 +163,7 @@ class Data_Gov_Gui(wx.Frame):
         print('Number of current rows: ' + str(self.display_Txt.GetNumberRows()))
         print('Size of myDataList: ', len(jobs))
         current, new = (self.display_Txt.GetNumberRows(), len(jobs))
+        # comparing new grid and the current grid depending on the jobs row and database row.
         if new < current:
             # - Delete rows:
             self.display_Txt.DeleteRows(0, current - new, True)
@@ -189,7 +189,6 @@ class Data_Gov_Gui(wx.Frame):
                 temp_dict = jobs[Counter]
                 for keys in grid_col_Label:
                     Values = temp_dict[keys]
-                    # print("Values = "+str(Values)+"Counter = "+ str(Counter) + "keys = " +str(keys) + "grid col lab"+str(grid_col_Label.index(keys)))
                     try:
                         self.display_Txt.SetCellValue(Counter, grid_col_Label.index(keys), str(Values))
                     except : #OperationalError as e:
@@ -198,6 +197,7 @@ class Data_Gov_Gui(wx.Frame):
                     self.display_Txt.AutoSizeColumns(True)
 
     def check_checkBoxes(self):
+        # check boxes variables
         all_job, location, part_time, full_time, specific_job = False, False, False, False, False
         if not self.offline_mode.IsChecked():
             if self.All_Jobs.IsChecked():
@@ -210,6 +210,7 @@ class Data_Gov_Gui(wx.Frame):
                 part_time = True
             if self.Full_Time.IsChecked():
                 full_time = True
+            # api call with all the check boxes checked.
             jobs = ap.jobs_with_combination(all_job, location, part_time, full_time, specific_job)
             if len(jobs) == 0:
                 jobs = [{"JOB_ID": "-", "Job_Title": "-", "Company_name": "-", "Salary": "-", "Last_Date": "-",

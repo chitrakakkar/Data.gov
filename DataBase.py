@@ -1,6 +1,7 @@
 from Database_table_model import *
 
 
+# creates a table and inserts data into the table
 def insert_all_job_to_table(job_data):
     try:
         if not job_table_model.create_table(True):
@@ -23,10 +24,10 @@ def insert_all_job_to_table(job_data):
     except OperationalError as e:
         print("Failed connection to the database", e)
 
-
+# all data from the database
 def get_all_data_from_the_table():
     all_data = []
-    jobs = job_table_model.select()
+    jobs = job_table_model.select()     # gets all the data as a class; needs to parse it to abe able to use it
     for job in jobs:
         temp = {'Job_ID': job.Job_ID, 'Job_Title': job.Job_Title, 'Company_Name': job.Company_Name,
                 'Salary': job.Salary, 'Last_Date': job.Last_Date, 'Location': job.Location, 'Link': job.Link}
@@ -44,6 +45,7 @@ def get_parametrized_data():
     return all_jobs
 
 
+# parametrized query for the check boxes.
 def jobs_with_combination_db(all_job, location, part_time, full_time, specific_job="Computer Enginner"):
     Database_all_jobs = []
     database_jobs =[]

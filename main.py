@@ -13,7 +13,8 @@ def main():
     # set and get application-wide properties
     frame = Data_Gov_Gui(None)  # This defines frame as our GUI
     frame.Show()  # Show the GUI
-    app.MainLoop()  # Execute the main GUI event loop-start the application's MainLoop whose role is to handle the events.
-
+    # Execute the main GUI event loop-start
+    # the application's MainLoop whose role is to handle the events.
+    app.MainLoop()
 
 main()

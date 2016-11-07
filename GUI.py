@@ -5,6 +5,8 @@ from DataBase import *
 import os
 
 # Define the GUI as a window/frame
+
+
 class Data_Gov_Gui(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, size=(1100, 700))  # Bring everything from __init__ for Frame into this class
@@ -83,8 +85,10 @@ class Data_Gov_Gui(wx.Frame):
         self.Save_Button.SetFont(bold_font)
         if not self.offline_mode.IsChecked():
             self.Jobs = ap.all_job()
+            print("Api", self.Jobs)
         else:
             self.Jobs = job_table_model.select()
+            print("Databse", self.Jobs)
     # This calls the API to fetch all the jobs data.
         # -------------Grid-Creation----------------------
 
@@ -130,24 +134,24 @@ class Data_Gov_Gui(wx.Frame):
             jobs = self.check_checkBoxes()
             self.grid_Creation(jobs)
         else:
-            jobs = get_all_data_from_the_table()
-
-
-
-
-        # else:
-        #     if self.Location_Based.IsChecked():
-        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
-        #         self.grid_Creation(jobs)
-        #     if self.Specific_Job.IsChecked():
-        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
-        #         self.grid_Creation(jobs)
-        #     if self.Part_Time.IsChecked():
-        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
-        #         self.grid_Creation(jobs)
-        #     if self.Full_Time.IsChecked():
-        #         jobs = get_parametrized_data(self.search_Txt.GetValue())
-        #         self.grid_Creation(jobs)
+            all_job, location, part_time, full_time, specific_job = False, False, False, False, False
+            if self.All_Jobs.IsChecked():
+                all_job = True
+            if self.Location_Based.IsChecked():
+                location = True
+            if self.Specific_Job.IsChecked():
+                specific_job = True
+            if self.Part_Time.IsChecked():
+                part_time = True
+            if self.Full_Time.IsChecked():
+                full_time = True
+            jobs = jobs_with_combination_db(all_job, location, part_time, full_time, specific_job)
+            if len(jobs) == 0:
+                jobs = [{"JOB_ID": "-", "Job_Title": "-", "Company_name": "-", "Salary": "-", "Last_Date": "-",
+                         "Location": "-",
+                         "Link": "-"}]
+            self.grid_Creation(jobs)
+        return jobs
 
     def OnQuitButton(self, e):
         # for subdir, dirs, files in os.walk('./'):
@@ -156,12 +160,19 @@ class Data_Gov_Gui(wx.Frame):
 
         exit(0)
 
-
-
     def grid_Creation(self, jobs):
-        grid_row = len(jobs)
-        print(grid_row)
+        print('Number of current rows: ' + str(self.display_Txt.GetNumberRows()))
+        print('Size of myDataList: ', len(jobs))
+        current, new = (self.display_Txt.GetNumberRows(), len(jobs))
+        if new < current:
+            # - Delete rows:
+            self.display_Txt.DeleteRows(0, current - new, True)
 
+        if new > current:
+            # - append rows:
+            self.display_Txt.AppendRows(new - current)
+
+        grid_row = len(jobs)
         if grid_row != 0:
             dict = {}
             # telling complier that job[0] is a dictionary
